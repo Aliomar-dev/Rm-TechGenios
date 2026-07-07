@@ -52,6 +52,27 @@ body {
   color: white;
 }
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+.transform-gpu,
+.motion-safe\:transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
 .dot-grid {
   background-image: radial-gradient(
     rgba(255, 255, 255, 0.35) 1px,
@@ -205,12 +226,58 @@ body {
   border-radius: 999px;
 }
 
-@media (max-width: 640px) {
-  ::-webkit-scrollbar {
-    width: 6px;
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
   }
 
   body {
     font-size: 15px;
+  }
+
+  .dot-grid,
+  .dot-grid-light,
+  .dot-grid-dark,
+  .footer-grid {
+    background-size: 32px 32px;
+  }
+
+  .footer-3d-cube,
+  .footer-3d-ring {
+    animation-duration: 12s;
+  }
+
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: 800px;
+  }
+
+  header,
+  footer,
+  #home {
+    content-visibility: visible;
+  }
+
+  .backdrop-blur-2xl {
+    backdrop-filter: blur(14px);
+  }
+
+  .backdrop-blur-xl {
+    backdrop-filter: blur(12px);
+  }
+
+  .shadow-2xl {
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

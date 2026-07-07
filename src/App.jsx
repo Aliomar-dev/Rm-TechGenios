@@ -270,6 +270,150 @@ const getPageFromPath = () => {
   return { page: "home", legal: null };
 };
 
+function SeoManager({ activePage, legalPage }) {
+  useEffect(() => {
+    const baseUrl = "https://www.rmtechgenios.com";
+    const pageData = {
+      home: {
+        title:
+          "RM TechGenios | BPO Services, IT Support & Virtual Assistance",
+        description:
+          "RM TechGenios provides BPO services, IT support, virtual assistance, telemarketing, appointment setting, CRM updates and business support solutions.",
+        canonical: `${baseUrl}/`,
+      },
+      contact: {
+        title: "Contact RM TechGenios | Business Support & IT Services",
+        description:
+          "Contact RM TechGenios for BPO services, IT support, virtual assistance, telemarketing and appointment setting solutions.",
+        canonical: `${baseUrl}/contact-us`,
+      },
+      privacy: {
+        title: "Privacy Policy | RM TechGenios",
+        description:
+          "Read the RM TechGenios privacy policy for website visitors, clients and business inquiries.",
+        canonical: `${baseUrl}/privacy-policy`,
+      },
+      terms: {
+        title: "Terms & Conditions | RM TechGenios",
+        description:
+          "Read the RM TechGenios terms and conditions for website use and service information.",
+        canonical: `${baseUrl}/terms-and-conditions`,
+      },
+    };
+
+    const key =
+      activePage === "legal" ? legalPage || "privacy" : activePage || "home";
+    const current = pageData[key] || pageData.home;
+
+    document.title = current.title;
+
+    const setMeta = (selector, attrName, attrValue, content) => {
+      let tag = document.head.querySelector(selector);
+
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.setAttribute(attrName, attrValue);
+        document.head.appendChild(tag);
+      }
+
+      tag.setAttribute("content", content);
+    };
+
+    setMeta(
+      'meta[name="description"]',
+      "name",
+      "description",
+      current.description
+    );
+    setMeta(
+      'meta[name="keywords"]',
+      "name",
+      "keywords",
+      "RM TechGenios, BPO services, IT support, virtual assistance, telemarketing, appointment setting, business support, CRM updates, Lahore"
+    );
+    setMeta('meta[name="robots"]', "name", "robots", "index, follow");
+    setMeta('meta[name="author"]', "name", "author", "RM TechGenios");
+
+    setMeta("meta[property='og:type']", "property", "og:type", "website");
+    setMeta("meta[property='og:title']", "property", "og:title", current.title);
+    setMeta(
+      "meta[property='og:description']",
+      "property",
+      "og:description",
+      current.description
+    );
+    setMeta("meta[property='og:url']", "property", "og:url", current.canonical);
+    setMeta(
+      "meta[property='og:site_name']",
+      "property",
+      "og:site_name",
+      "RM TechGenios"
+    );
+
+    setMeta(
+      'meta[name="twitter:card"]',
+      "name",
+      "twitter:card",
+      "summary_large_image"
+    );
+    setMeta(
+      'meta[name="twitter:title"]',
+      "name",
+      "twitter:title",
+      current.title
+    );
+    setMeta(
+      'meta[name="twitter:description"]',
+      "name",
+      "twitter:description",
+      current.description
+    );
+
+    let canonical = document.head.querySelector('link[rel="canonical"]');
+
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+
+    canonical.setAttribute("href", current.canonical);
+
+    const schemaId = "rm-techgenios-schema";
+    let schema = document.getElementById(schemaId);
+
+    if (!schema) {
+      schema = document.createElement("script");
+      schema.id = schemaId;
+      schema.type = "application/ld+json";
+      document.head.appendChild(schema);
+    }
+
+    schema.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      name: "RM TechGenios",
+      url: baseUrl,
+      email: companyEmail,
+      telephone: companyPhoneLink,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress:
+          "Office No. 1609, 16th floor, All Hafeez Executive Firdous Market Gulberg III",
+        addressLocality: "Lahore",
+        addressCountry: "PK",
+      },
+      sameAs: socialLinks
+        .filter((item) => item.name !== "WhatsApp")
+        .map((item) => item.url),
+      description:
+        "RM TechGenios provides BPO services, IT support, virtual assistance, telemarketing, appointment setting and business support solutions.",
+    });
+  }, [activePage, legalPage]);
+
+  return null;
+}
+
 function CountNumber({ end, suffix = "", prefix = "" }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.65 });
@@ -502,17 +646,17 @@ function Header({
       <motion.div
         animate={{
           backgroundColor: navDark
-            ? "rgba(2, 6, 23, 0.94)"
-            : "rgba(255, 255, 255, 0.12)",
+            ? "rgba(2, 6, 23, 0.95)"
+            : "rgba(2, 6, 23, 0.58)",
           borderColor: navDark
-            ? "rgba(255,255,255,0.13)"
-            : "rgba(255,255,255,0.28)",
+            ? "rgba(255,255,255,0.14)"
+            : "rgba(255,255,255,0.24)",
           boxShadow: navDark
             ? "0 24px 80px rgba(2,6,23,0.32)"
-            : "0 20px 70px rgba(255,255,255,0.08)",
+            : "0 18px 60px rgba(2,6,23,0.18)",
         }}
-        transition={{ duration: 0.25 }}
-        className="mx-auto flex h-[66px] max-w-7xl items-center justify-between rounded-2xl border px-3 backdrop-blur-2xl sm:h-[72px] sm:px-5"
+        transition={{ duration: 0.2 }}
+        className="mx-auto flex h-[66px] max-w-7xl transform-gpu items-center justify-between rounded-2xl border px-3 backdrop-blur-2xl sm:h-[72px] sm:px-5"
       >
         <button
           type="button"
@@ -522,7 +666,9 @@ function Header({
           <img
             src={logo}
             alt="RM TechGenios Logo"
-            className="h-10 w-10 shrink-0 rounded-xl object-contain"
+            loading="eager"
+            decoding="async"
+            className="h-10 w-10 shrink-0 rounded-xl bg-white object-contain p-1 shadow-lg shadow-black/10 sm:h-11 sm:w-11"
           />
 
           <span className="min-w-0 text-left leading-none">
@@ -541,10 +687,10 @@ function Header({
               key={item.label}
               type="button"
               onClick={() => handleNavClick(item)}
-              className="group relative px-4 py-2.5 text-sm font-bold text-white/75 transition hover:text-white"
+              className="group relative rounded-xl px-4 py-2.5 text-sm font-bold text-white/75 transition hover:bg-white/10 hover:text-white"
             >
               {item.label}
-              <span className="absolute bottom-0 left-4 right-4 h-[2px] origin-left scale-x-0 rounded-full bg-cyan-300 transition group-hover:scale-x-100" />
+              <span className="absolute bottom-1 left-4 right-4 h-[2px] origin-left scale-x-0 rounded-full bg-cyan-300 transition group-hover:scale-x-100" />
             </button>
           ))}
         </nav>
@@ -557,14 +703,26 @@ function Header({
           Get Support <FiArrowRight />
         </button>
 
-        <button
-          type="button"
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="grid h-11 w-11 place-items-center rounded-xl bg-white text-2xl text-slate-950 lg:hidden"
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <FiX /> : <FiMenu />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <a
+            href={`https://wa.me/${companyPhoneLink.replace("+", "")}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="WhatsApp"
+            className="grid h-11 w-11 place-items-center rounded-xl bg-white text-xl text-[#25D366] shadow-lg shadow-black/10"
+          >
+            <FaWhatsapp />
+          </a>
+
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="grid h-11 w-11 place-items-center rounded-xl bg-white text-2xl text-slate-950 shadow-lg shadow-black/10"
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
 
         <AnimatePresence>
           {menuOpen && (
@@ -572,25 +730,79 @@ function Header({
               initial={{ opacity: 0, y: -12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
-              className="absolute left-3 right-3 top-20 grid overflow-hidden rounded-3xl border border-white/10 bg-slate-950/96 p-3 shadow-2xl backdrop-blur-xl lg:hidden"
+              transition={{ duration: 0.2 }}
+              className="absolute left-3 right-3 top-20 overflow-hidden rounded-3xl border border-white/10 bg-slate-950/97 p-3 shadow-2xl backdrop-blur-xl lg:hidden"
             >
-              {navItems.map((item) => (
+              <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] p-3">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={logo}
+                    alt="RM TechGenios Logo"
+                    loading="eager"
+                    decoding="async"
+                    className="h-11 w-11 rounded-xl bg-white object-contain p-1"
+                  />
+
+                  <div>
+                    <h3 className="font-heading text-sm font-black text-white">
+                      RM TechGenios
+                    </h3>
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300">
+                      Business Support
+                    </p>
+                  </div>
+                </div>
+
                 <button
-                  key={item.label}
                   type="button"
-                  onClick={() => handleNavClick(item)}
-                  className="rounded-2xl px-4 py-3 text-left text-sm font-black text-white/75 transition hover:bg-white/10 hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                  className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-xl text-white"
                 >
-                  {item.label}
+                  <FiX />
                 </button>
-              ))}
+              </div>
+
+              <div className="grid gap-1">
+                {navItems.map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => handleNavClick(item)}
+                    className="flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-black text-white/75 transition hover:bg-white/10 hover:text-white"
+                  >
+                    {item.label}
+                    <FiArrowRight className="text-white/35" />
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+                <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-white/45">
+                  Connect With Us
+                </p>
+
+                <div className="flex items-center justify-between gap-3">
+                  {socialLinks.map((item) => (
+                    <a
+                      key={item.name}
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={item.name}
+                      className="grid h-11 w-11 place-items-center rounded-xl bg-white text-xl shadow-lg shadow-black/10 transition active:scale-95"
+                    >
+                      <span className={item.iconColor}>{item.icon}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
 
               <button
                 type="button"
                 onClick={openContactPage}
-                className="mt-2 rounded-2xl bg-white px-4 py-3 text-center text-sm font-black text-slate-950"
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 px-4 py-4 text-center text-sm font-black text-white shadow-xl shadow-blue-500/20"
               >
-                Get Support
+                Get Support <FiArrowRight />
               </button>
             </motion.nav>
           )}
@@ -867,11 +1079,17 @@ function LegalPage({ type, openLegalPage, goHome }) {
             </h3>
 
             <div className="mt-4 grid gap-3 text-sm text-white/75 sm:text-base">
-              <a href={`mailto:${companyEmail}`} className="break-all transition hover:text-cyan-300">
+              <a
+                href={`mailto:${companyEmail}`}
+                className="break-all transition hover:text-cyan-300"
+              >
                 {companyEmail}
               </a>
 
-              <a href={`tel:${companyPhoneLink}`} className="transition hover:text-cyan-300">
+              <a
+                href={`tel:${companyPhoneLink}`}
+                className="transition hover:text-cyan-300"
+              >
                 {companyPhone}
               </a>
 
@@ -914,6 +1132,30 @@ function LegalPage({ type, openLegalPage, goHome }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function ContactInfoCard({ href, icon, title, text, external = false }) {
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
+      className="group rounded-[24px] border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/[0.1]"
+    >
+      <div className="flex items-start gap-4">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white">
+          {icon}
+        </span>
+
+        <div>
+          <h4 className="font-heading font-black">{title}</h4>
+          <p className="mt-1 break-words text-sm leading-6 text-white/60 group-hover:text-white sm:text-base">
+            {text}
+          </p>
+        </div>
+      </div>
+    </a>
   );
 }
 
@@ -1088,30 +1330,6 @@ function ContactPage({
         </div>
       </div>
     </section>
-  );
-}
-
-function ContactInfoCard({ href, icon, title, text, external = false }) {
-  return (
-    <a
-      href={href}
-      target={external ? "_blank" : undefined}
-      rel={external ? "noreferrer" : undefined}
-      className="group rounded-[24px] border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/[0.1]"
-    >
-      <div className="flex items-start gap-4">
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white">
-          {icon}
-        </span>
-
-        <div>
-          <h4 className="font-heading font-black">{title}</h4>
-          <p className="mt-1 break-words text-sm leading-6 text-white/60 group-hover:text-white sm:text-base">
-            {text}
-          </p>
-        </div>
-      </div>
-    </a>
   );
 }
 
@@ -1299,6 +1517,8 @@ export default function App() {
 
   return (
     <main className="min-h-screen overflow-hidden bg-white text-slate-950">
+      <SeoManager activePage={activePage} legalPage={legalPage} />
+
       <Header
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
@@ -1465,6 +1685,8 @@ export default function App() {
                   <img
                     src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80"
                     alt="RM TechGenios business support team"
+                    loading="eager"
+                    decoding="async"
                     className="h-[340px] w-full rounded-[24px] object-cover sm:h-[430px]"
                   />
 
@@ -1497,7 +1719,7 @@ export default function App() {
                   <motion.div
                     animate={{ y: [0, 10, 0] }}
                     transition={{ duration: 4, repeat: Infinity }}
-                    className="absolute -right-1 top-34 rounded-l-2xl bg-cyan-300 px-3 py-2 text-xs font-black text-slate-950 shadow-xl sm:top-40 sm:px-4 sm:py-3 sm:text-sm"
+                    className="absolute -right-1 top-[8.5rem] rounded-l-2xl bg-cyan-300 px-3 py-2 text-xs font-black text-slate-950 shadow-xl sm:top-40 sm:px-4 sm:py-3 sm:text-sm"
                   >
                     Telemarketing
                   </motion.div>
@@ -1528,6 +1750,8 @@ export default function App() {
                   <img
                     src={aboutImg}
                     alt="RM TechGenios Team"
+                    loading="lazy"
+                    decoding="async"
                     className="h-[280px] w-full rounded-[24px] object-cover sm:h-[390px] lg:h-[430px]"
                   />
                 </div>
@@ -1817,6 +2041,8 @@ export default function App() {
                     <img
                       src={img}
                       alt="Business operations"
+                      loading="lazy"
+                      decoding="async"
                       className="h-24 w-full object-cover grayscale transition duration-500 hover:scale-105 hover:grayscale-0 sm:h-40"
                     />
                   </motion.div>
@@ -1902,7 +2128,7 @@ export default function App() {
           pointerEvents: showTop ? "auto" : "none",
         }}
         transition={{ duration: 0.28, ease: "easeOut" }}
-        className="fixed bottom-5 right-5 z-[9998] grid h-13 w-13 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-600 text-2xl text-white shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
+        className="fixed bottom-5 right-5 z-[9998] grid h-14 w-14 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-600 text-2xl text-white shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 sm:bottom-6 sm:right-6"
         aria-label="Go to top"
       >
         <span className="absolute inset-0 bg-[radial-gradient(circle_at_25%_18%,rgba(255,255,255,0.55),transparent_30%)]" />
@@ -1932,7 +2158,9 @@ function Footer({ openLegalPage, openContactPage, goHome }) {
               <img
                 src={logo}
                 alt="RM TechGenios Logo"
-                className="h-14 w-14 rounded-2xl object-contain"
+                loading="lazy"
+                decoding="async"
+                className="h-14 w-14 rounded-2xl bg-white object-contain p-1"
               />
 
               <div>
