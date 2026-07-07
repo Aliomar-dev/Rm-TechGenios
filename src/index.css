@@ -10,6 +10,7 @@ body {
   font-family: "Manrope", system-ui, sans-serif;
   background: #ffffff;
   letter-spacing: -0.01em;
+  overflow-x: hidden;
 }
 
 .font-heading {
@@ -125,6 +126,7 @@ body {
   color: #020617;
   outline: none;
   transition: 0.25s ease;
+  border-radius: 18px;
 }
 
 .input::placeholder {
@@ -200,4 +202,15 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(#06b6d4, #2563eb);
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  body {
+    font-size: 15px;
+  }
 }
