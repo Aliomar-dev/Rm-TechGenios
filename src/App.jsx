@@ -225,41 +225,6 @@ const clientImages = [
   "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=400&q=80",
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 34, filter: "blur(6px)" },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const fadeLeft = {
-  hidden: { opacity: 0, x: -42, filter: "blur(6px)" },
-  show: {
-    opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const fadeRight = {
-  hidden: { opacity: 0, x: 42, filter: "blur(6px)" },
-  show: {
-    opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09 } },
-};
-
 const getPageFromPath = () => {
   const path = window.location.pathname;
 
@@ -270,9 +235,58 @@ const getPageFromPath = () => {
   return { page: "home", legal: null };
 };
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 32, filter: "blur(5px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const fadeLeft = {
+  hidden: { opacity: 0, x: -36, filter: "blur(5px)" },
+  show: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const fadeRight = {
+  hidden: { opacity: 0, x: 36, filter: "blur(5px)" },
+  show: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07 } },
+};
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  return isMobile;
+}
+
 function SeoManager({ activePage, legalPage }) {
   useEffect(() => {
     const baseUrl = "https://www.rmtechgenios.com";
+
     const pageData = {
       home: {
         title:
@@ -379,12 +393,11 @@ function SeoManager({ activePage, legalPage }) {
 
     canonical.setAttribute("href", current.canonical);
 
-    const schemaId = "rm-techgenios-schema";
-    let schema = document.getElementById(schemaId);
+    let schema = document.getElementById("rm-techgenios-schema");
 
     if (!schema) {
       schema = document.createElement("script");
-      schema.id = schemaId;
+      schema.id = "rm-techgenios-schema";
       schema.type = "application/ld+json";
       document.head.appendChild(schema);
     }
@@ -426,7 +439,7 @@ function CountNumber({ end, suffix = "", prefix = "" }) {
     }
 
     let startTime;
-    const duration = 1300;
+    const duration = 1100;
 
     const animate = (time) => {
       if (!startTime) startTime = time;
@@ -468,7 +481,7 @@ function SignatureName() {
       index += 1;
       setTypedName(fullName.slice(0, index));
       if (index >= fullName.length) clearInterval(interval);
-    }, 92);
+    }, 86);
 
     return () => clearInterval(interval);
   }, [isInView]);
@@ -485,13 +498,15 @@ function SignatureName() {
 }
 
 function Reveal({ children, className = "", delay = 0, direction = "up" }) {
+  const isMobile = useIsMobile();
+
   const variants = {
     hidden: {
       opacity: 0,
-      y: direction === "up" ? 42 : direction === "down" ? -42 : 0,
-      x: direction === "left" ? 42 : direction === "right" ? -42 : 0,
-      scale: 0.96,
-      filter: "blur(7px)",
+      y: direction === "up" ? (isMobile ? 22 : 42) : direction === "down" ? -32 : 0,
+      x: direction === "left" ? (isMobile ? 18 : 42) : direction === "right" ? (isMobile ? -18 : -42) : 0,
+      scale: isMobile ? 0.98 : 0.96,
+      filter: isMobile ? "blur(2px)" : "blur(7px)",
     },
     show: {
       opacity: 1,
@@ -500,8 +515,8 @@ function Reveal({ children, className = "", delay = 0, direction = "up" }) {
       scale: 1,
       filter: "blur(0px)",
       transition: {
-        duration: 0.72,
-        delay,
+        duration: isMobile ? 0.4 : 0.72,
+        delay: isMobile ? Math.min(delay, 0.05) : delay,
         ease: [0.22, 1, 0.36, 1],
       },
     },
@@ -512,7 +527,7 @@ function Reveal({ children, className = "", delay = 0, direction = "up" }) {
       variants={variants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: false, amount: 0.16 }}
+      viewport={{ once: false, amount: isMobile ? 0.08 : 0.16 }}
       className={className}
     >
       {children}
@@ -521,6 +536,7 @@ function Reveal({ children, className = "", delay = 0, direction = "up" }) {
 }
 
 function TiltCard({ children, className = "" }) {
+  const isMobile = useIsMobile();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -531,6 +547,8 @@ function TiltCard({ children, className = "" }) {
   const rotateY = useTransform(smoothX, [-0.5, 0.5], [-7, 7]);
 
   const handleMove = (event) => {
+    if (isMobile) return;
+
     const rect = event.currentTarget.getBoundingClientRect();
     mouseX.set((event.clientX - rect.left) / rect.width - 0.5);
     mouseY.set((event.clientY - rect.top) / rect.height - 0.5);
@@ -545,7 +563,7 @@ function TiltCard({ children, className = "" }) {
     <motion.div
       onMouseMove={handleMove}
       onMouseLeave={reset}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      style={isMobile ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
       className={className}
     >
       {children}
@@ -554,6 +572,8 @@ function TiltCard({ children, className = "" }) {
 }
 
 function AgencyBg({ dark = false }) {
+  const isMobile = useIsMobile();
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <div
@@ -566,11 +586,15 @@ function AgencyBg({ dark = false }) {
 
       <motion.div
         animate={{
-          y: [0, -18, 0],
-          x: [0, 10, 0],
-          rotate: [0, 8, 0],
+          y: isMobile ? [0, -8, 0] : [0, -18, 0],
+          x: isMobile ? [0, 4, 0] : [0, 10, 0],
+          rotate: isMobile ? [0, 4, 0] : [0, 8, 0],
         }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        transition={{
+          duration: isMobile ? 12 : 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         className={
           dark
             ? "absolute right-[8%] top-[15%] h-20 w-20 border-[15px] border-cyan-300/14 sm:h-24 sm:w-24"
@@ -579,8 +603,15 @@ function AgencyBg({ dark = false }) {
       />
 
       <motion.div
-        animate={{ y: [0, 22, 0], rotate: [0, -10, 0] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        animate={{
+          y: isMobile ? [0, 10, 0] : [0, 22, 0],
+          rotate: isMobile ? [0, -5, 0] : [0, -10, 0],
+        }}
+        transition={{
+          duration: isMobile ? 13 : 9,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
         className={
           dark
             ? "absolute bottom-[10%] left-[8%] h-24 w-24 bg-white/5 backdrop-blur"
@@ -642,172 +673,171 @@ function Header({
   };
 
   return (
-    <header className="fixed left-0 top-0 z-50 w-full px-3 pt-3 sm:px-4 sm:pt-4">
-      <motion.div
-        animate={{
-          backgroundColor: navDark
-            ? "rgba(2, 6, 23, 0.95)"
-            : "rgba(2, 6, 23, 0.58)",
-          borderColor: navDark
-            ? "rgba(255,255,255,0.14)"
-            : "rgba(255,255,255,0.24)",
-          boxShadow: navDark
-            ? "0 24px 80px rgba(2,6,23,0.32)"
-            : "0 18px 60px rgba(2,6,23,0.18)",
-        }}
-        transition={{ duration: 0.2 }}
-        className="mx-auto flex h-[66px] max-w-7xl transform-gpu items-center justify-between rounded-2xl border px-3 backdrop-blur-2xl sm:h-[72px] sm:px-5"
-      >
-        <button
-          type="button"
-          onClick={() => goHome("#home")}
-          className="flex min-w-0 items-center gap-3 text-white"
-        >
-          <img
-            src={logo}
-            alt="RM TechGenios Logo"
-            loading="eager"
-            decoding="async"
-            className="h-10 w-10 shrink-0 rounded-xl bg-white object-contain p-1 shadow-lg shadow-black/10 sm:h-11 sm:w-11"
-          />
-
-          <span className="min-w-0 text-left leading-none">
-            <strong className="block truncate font-heading text-sm font-black tracking-tight sm:text-lg">
-              RM TechGenios
-            </strong>
-            <small className="mt-1 hidden text-[10px] font-black uppercase tracking-[0.22em] text-cyan-300 sm:block">
-              BPO & IT Support
-            </small>
-          </span>
-        </button>
-
-        <nav className="hidden items-center gap-1 lg:flex">
-          {navItems.map((item) => (
+    <header className="pointer-events-none fixed left-0 top-0 z-50 w-full px-3 pt-3 sm:px-4 sm:pt-4">
+      <AnimatePresence mode="wait">
+        {!menuOpen && (
+          <motion.div
+            key="main-nav"
+            initial={{ opacity: 0, y: -14 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              backgroundColor: navDark
+                ? "rgba(2, 6, 23, 0.95)"
+                : "rgba(2, 6, 23, 0.58)",
+              borderColor: navDark
+                ? "rgba(255,255,255,0.14)"
+                : "rgba(255,255,255,0.24)",
+              boxShadow: navDark
+                ? "0 24px 80px rgba(2,6,23,0.32)"
+                : "0 18px 60px rgba(2,6,23,0.18)",
+            }}
+            exit={{ opacity: 0, y: -14 }}
+            transition={{ duration: 0.18 }}
+            className="pointer-events-auto mx-auto flex h-[66px] max-w-7xl transform-gpu items-center justify-between rounded-2xl border px-3 backdrop-blur-2xl sm:h-[72px] sm:px-5"
+          >
             <button
-              key={item.label}
               type="button"
-              onClick={() => handleNavClick(item)}
-              className="group relative rounded-xl px-4 py-2.5 text-sm font-bold text-white/75 transition hover:bg-white/10 hover:text-white"
+              onClick={() => goHome("#home")}
+              className="flex min-w-0 items-center gap-3 text-white"
             >
-              {item.label}
-              <span className="absolute bottom-1 left-4 right-4 h-[2px] origin-left scale-x-0 rounded-full bg-cyan-300 transition group-hover:scale-x-100" />
+              <img
+                src={logo}
+                alt="RM TechGenios Logo"
+                loading="eager"
+                decoding="async"
+                className="h-10 w-10 shrink-0 rounded-xl bg-white object-contain p-1 shadow-lg shadow-black/10 sm:h-11 sm:w-11"
+              />
+
+              <span className="min-w-0 text-left leading-none">
+                <strong className="block truncate font-heading text-sm font-black tracking-tight sm:text-lg">
+                  RM TechGenios
+                </strong>
+                <small className="mt-1 hidden text-[10px] font-black uppercase tracking-[0.22em] text-cyan-300 sm:block">
+                  BPO & IT Support
+                </small>
+              </span>
             </button>
-          ))}
-        </nav>
 
-        <button
-          type="button"
-          onClick={openContactPage}
-          className="hidden items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-300 lg:inline-flex"
-        >
-          Get Support <FiArrowRight />
-        </button>
-
-        <div className="flex items-center gap-2 lg:hidden">
-          <a
-            href={`https://wa.me/${companyPhoneLink.replace("+", "")}`}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="WhatsApp"
-            className="grid h-11 w-11 place-items-center rounded-xl bg-white text-xl text-[#25D366] shadow-lg shadow-black/10"
-          >
-            <FaWhatsapp />
-          </a>
-
-          <button
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="grid h-11 w-11 place-items-center rounded-xl bg-white text-2xl text-slate-950 shadow-lg shadow-black/10"
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <FiX /> : <FiMenu />}
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.nav
-              initial={{ opacity: 0, y: -12, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -12, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-              className="absolute left-3 right-3 top-20 overflow-hidden rounded-3xl border border-white/10 bg-slate-950/97 p-3 shadow-2xl backdrop-blur-xl lg:hidden"
-            >
-              <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] p-3">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={logo}
-                    alt="RM TechGenios Logo"
-                    loading="eager"
-                    decoding="async"
-                    className="h-11 w-11 rounded-xl bg-white object-contain p-1"
-                  />
-
-                  <div>
-                    <h3 className="font-heading text-sm font-black text-white">
-                      RM TechGenios
-                    </h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300">
-                      Business Support
-                    </p>
-                  </div>
-                </div>
-
+            <nav className="hidden items-center gap-1 lg:flex">
+              {navItems.map((item) => (
                 <button
+                  key={item.label}
                   type="button"
-                  onClick={() => setMenuOpen(false)}
-                  className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-xl text-white"
+                  onClick={() => handleNavClick(item)}
+                  className="group relative rounded-xl px-4 py-2.5 text-sm font-bold text-white/75 transition hover:bg-white/10 hover:text-white"
                 >
-                  <FiX />
+                  {item.label}
+                  <span className="absolute bottom-1 left-4 right-4 h-[2px] origin-left scale-x-0 rounded-full bg-cyan-300 transition group-hover:scale-x-100" />
                 </button>
-              </div>
+              ))}
+            </nav>
 
-              <div className="grid gap-1">
-                {navItems.map((item) => (
-                  <button
-                    key={item.label}
-                    type="button"
-                    onClick={() => handleNavClick(item)}
-                    className="flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-black text-white/75 transition hover:bg-white/10 hover:text-white"
-                  >
-                    {item.label}
-                    <FiArrowRight className="text-white/35" />
-                  </button>
-                ))}
-              </div>
+            <button
+              type="button"
+              onClick={openContactPage}
+              className="hidden items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-300 lg:inline-flex"
+            >
+              Get Support <FiArrowRight />
+            </button>
 
-              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
-                <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-white/45">
-                  Connect With Us
-                </p>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="grid h-11 w-11 place-items-center rounded-xl bg-white text-2xl text-slate-950 shadow-lg shadow-black/10 lg:hidden"
+              aria-label="Open menu"
+            >
+              <FiMenu />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-                <div className="flex items-center justify-between gap-3">
-                  {socialLinks.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={item.name}
-                      className="grid h-11 w-11 place-items-center rounded-xl bg-white text-xl shadow-lg shadow-black/10 transition active:scale-95"
-                    >
-                      <span className={item.iconColor}>{item.icon}</span>
-                    </a>
-                  ))}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -16, scale: 0.98 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="pointer-events-auto fixed left-3 right-3 top-3 overflow-hidden rounded-3xl border border-white/10 bg-slate-950/97 p-3 shadow-2xl backdrop-blur-xl lg:hidden"
+          >
+            <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] p-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <img
+                  src={logo}
+                  alt="RM TechGenios Logo"
+                  loading="eager"
+                  decoding="async"
+                  className="h-11 w-11 shrink-0 rounded-xl bg-white object-contain p-1"
+                />
+
+                <div className="min-w-0">
+                  <h3 className="truncate font-heading text-sm font-black text-white">
+                    RM TechGenios
+                  </h3>
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300">
+                    Business Support
+                  </p>
                 </div>
               </div>
 
               <button
                 type="button"
-                onClick={openContactPage}
-                className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 px-4 py-4 text-center text-sm font-black text-white shadow-xl shadow-blue-500/20"
+                onClick={() => setMenuOpen(false)}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/10 text-xl text-white"
+                aria-label="Close menu"
               >
-                Get Support <FiArrowRight />
+                <FiX />
               </button>
-            </motion.nav>
-          )}
-        </AnimatePresence>
-      </motion.div>
+            </div>
+
+            <div className="grid gap-1">
+              {navItems.map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => handleNavClick(item)}
+                  className="flex items-center justify-between rounded-2xl px-4 py-3 text-left text-sm font-black text-white/75 transition hover:bg-white/10 hover:text-white"
+                >
+                  {item.label}
+                  <FiArrowRight className="text-white/35" />
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4">
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-white/45">
+                Connect With Us
+              </p>
+
+              <div className="grid grid-cols-4 gap-3">
+                {socialLinks.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={item.name}
+                    className="grid h-11 place-items-center rounded-xl bg-white text-xl shadow-lg shadow-black/10 transition active:scale-95"
+                  >
+                    <span className={item.iconColor}>{item.icon}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={openContactPage}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-600 px-4 py-4 text-center text-sm font-black text-white shadow-xl shadow-blue-500/20"
+            >
+              Get Support <FiArrowRight />
+            </button>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
@@ -866,10 +896,10 @@ function ReviewCarousel() {
       <AnimatePresence mode="wait">
         <motion.div
           key={active}
-          initial={{ opacity: 0, x: 32, scale: 0.97 }}
+          initial={{ opacity: 0, x: 24, scale: 0.98 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: -32, scale: 0.97 }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
+          exit={{ opacity: 0, x: -24, scale: 0.98 }}
+          transition={{ duration: 0.38, ease: "easeOut" }}
           className="relative overflow-hidden rounded-[30px] border border-slate-200 bg-white p-5 shadow-[0_22px_70px_rgba(15,40,90,0.08)] sm:p-7"
         >
           <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-100/70" />
@@ -1231,9 +1261,9 @@ function ContactPage({
 
             <motion.form
               onSubmit={handleFormSubmit}
-              initial={{ opacity: 0, y: 28 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              transition={{ duration: 0.42, ease: "easeOut" }}
               className="relative overflow-hidden rounded-[26px] border border-white/10 bg-white/[0.08] p-5 shadow-2xl shadow-black/25 backdrop-blur-2xl sm:p-7 lg:p-8"
             >
               <div className="absolute -right-10 -top-10 h-32 w-32 border-[24px] border-cyan-300/10" />
@@ -1335,6 +1365,7 @@ function ContactPage({
 
 export default function App() {
   const initialPage = getPageFromPath();
+  const isMobile = useIsMobile();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [navDark, setNavDark] = useState(initialPage.page !== "home");
@@ -1361,6 +1392,13 @@ export default function App() {
   });
 
   useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
     const handlePopState = () => {
       const pageData = getPageFromPath();
       setActivePage(pageData.page);
@@ -1382,7 +1420,7 @@ export default function App() {
     }
   }, [activePage]);
 
-  const heroY = useTransform(scrollYProgress, [0, 0.35], [0, -70]);
+  const heroY = useTransform(scrollYProgress, [0, 0.35], [0, isMobile ? -25 : -70]);
 
   const mobileWorkAreas = useMemo(
     () => (showAllWork ? workAreas : workAreas.slice(0, 4)),
@@ -1640,15 +1678,6 @@ export default function App() {
 
                 <motion.div
                   variants={fadeUp}
-                  className="mt-7 flex flex-wrap gap-5 lg:hidden"
-                >
-                  {socialLinks.map((item) => (
-                    <SocialIcon key={item.name} item={item} dark />
-                  ))}
-                </motion.div>
-
-                <motion.div
-                  variants={fadeUp}
                   className="mt-9 grid max-w-xl grid-cols-3 gap-3"
                 >
                   {stats.map((stat) => (
@@ -1674,9 +1703,9 @@ export default function App() {
 
               <motion.div
                 style={{ y: heroY }}
-                initial={{ opacity: 0, x: 38 }}
+                initial={{ opacity: 0, x: isMobile ? 0 : 38 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
+                transition={{ duration: isMobile ? 0.35 : 0.65, ease: "easeOut" }}
                 className="relative mx-auto w-full max-w-lg"
               >
                 <div className="absolute -inset-8 rounded-full bg-cyan-400/20 blur-3xl" />
@@ -1710,7 +1739,7 @@ export default function App() {
 
                   <motion.div
                     animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 3.5, repeat: Infinity }}
+                    transition={{ duration: 4.5, repeat: Infinity }}
                     className="absolute -left-1 top-16 rounded-r-2xl bg-white px-3 py-2 text-xs font-black text-slate-950 shadow-xl sm:top-20 sm:px-4 sm:py-3 sm:text-sm"
                   >
                     Appointment Setting
@@ -1718,7 +1747,7 @@ export default function App() {
 
                   <motion.div
                     animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 4, repeat: Infinity }}
+                    transition={{ duration: 5, repeat: Infinity }}
                     className="absolute -right-1 top-[8.5rem] rounded-l-2xl bg-cyan-300 px-3 py-2 text-xs font-black text-slate-950 shadow-xl sm:top-40 sm:px-4 sm:py-3 sm:text-sm"
                   >
                     Telemarketing
@@ -1740,10 +1769,10 @@ export default function App() {
 
             <div className="relative mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.98fr_1.02fr] lg:gap-16">
               <motion.div
-                initial={{ opacity: 0, x: -35, scale: 0.96 }}
+                initial={{ opacity: 0, x: isMobile ? 0 : -35, scale: 0.97 }}
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                viewport={{ once: false, amount: 0.22 }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                viewport={{ once: false, amount: 0.18 }}
+                transition={{ duration: isMobile ? 0.38 : 0.65, ease: [0.22, 1, 0.36, 1] }}
                 className="relative"
               >
                 <div className="relative mx-auto max-w-[640px] rounded-[30px] bg-white p-[8px] shadow-[0_20px_60px_rgba(15,23,42,0.16)] sm:p-[10px]">
@@ -1758,10 +1787,10 @@ export default function App() {
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, x: 35 }}
+                initial={{ opacity: 0, x: isMobile ? 0 : 35 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: false, amount: 0.22 }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                viewport={{ once: false, amount: 0.18 }}
+                transition={{ duration: isMobile ? 0.38 : 0.65, ease: [0.22, 1, 0.36, 1] }}
                 className="relative"
               >
                 <div className="inline-flex items-center gap-3">
@@ -1824,7 +1853,7 @@ export default function App() {
                 variants={fadeLeft}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: false, amount: 0.22 }}
+                viewport={{ once: false, amount: 0.18 }}
               >
                 <p className="text-lg font-semibold text-slate-600 sm:text-xl">
                   What We Provide
@@ -1855,10 +1884,10 @@ export default function App() {
                 {services.map((service, index) => (
                   <motion.div
                     key={service.title}
-                    initial={{ opacity: 0, y: 36, scale: 0.96 }}
+                    initial={{ opacity: 0, y: isMobile ? 20 : 36, scale: 0.98 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: false, amount: 0.18 }}
-                    transition={{ duration: 0.62, delay: index * 0.04 }}
+                    viewport={{ once: false, amount: 0.14 }}
+                    transition={{ duration: isMobile ? 0.34 : 0.55, delay: isMobile ? 0 : index * 0.035 }}
                     className={`group rounded-[28px] border bg-white p-5 shadow-[0_20px_70px_rgba(15,40,90,0.07)] transition hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10 sm:min-h-[245px] sm:p-7 ${
                       index % 2 === 0
                         ? "border-cyan-300"
@@ -1901,10 +1930,10 @@ export default function App() {
                 {mobileWorkAreas.map((item, index) => (
                   <motion.div
                     key={item.title}
-                    initial={{ opacity: 0, y: 28, scale: 0.97 }}
+                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: false, amount: 0.18 }}
-                    transition={{ duration: 0.55, delay: index * 0.04 }}
+                    viewport={{ once: false, amount: 0.12 }}
+                    transition={{ duration: 0.32, delay: index * 0.02 }}
                     className="rounded-[26px] border border-white/10 bg-white/[0.07] p-5 shadow-2xl shadow-black/20 backdrop-blur-xl"
                   >
                     <div className="flex items-start gap-4">
@@ -1956,7 +1985,7 @@ export default function App() {
                     initial={{ opacity: 0, y: 38, scale: 0.96 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: false, amount: 0.18 }}
-                    transition={{ duration: 0.62, delay: index * 0.035 }}
+                    transition={{ duration: 0.55, delay: index * 0.035 }}
                     whileHover={{ y: -8 }}
                     className="group relative overflow-hidden rounded-[30px] border border-white/10 bg-white/[0.07] p-6 shadow-2xl shadow-black/15 backdrop-blur-xl transition hover:border-cyan-300/45"
                   >
@@ -2024,16 +2053,16 @@ export default function App() {
                 variants={fadeLeft}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: false, amount: 0.22 }}
+                viewport={{ once: false, amount: 0.18 }}
                 className="grid grid-cols-3 gap-2 sm:gap-4"
               >
                 {clientImages.map((img, index) => (
                   <motion.div
                     key={img}
-                    initial={{ opacity: 0, y: 28, scale: 0.94 }}
+                    initial={{ opacity: 0, y: isMobile ? 14 : 28, scale: 0.97 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: false, amount: 0.2 }}
-                    transition={{ duration: 0.5, delay: index * 0.035 }}
+                    viewport={{ once: false, amount: 0.16 }}
+                    transition={{ duration: isMobile ? 0.3 : 0.48, delay: isMobile ? 0 : index * 0.025 }}
                     className={`overflow-hidden rounded-2xl border border-white bg-white shadow-lg shadow-slate-900/5 sm:rounded-[24px] ${
                       index % 2 === 0 ? "translate-y-4 sm:translate-y-6" : ""
                     }`}
@@ -2053,7 +2082,7 @@ export default function App() {
                 variants={fadeRight}
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: false, amount: 0.22 }}
+                viewport={{ once: false, amount: 0.18 }}
                 className="relative"
               >
                 <div className="absolute -left-3 -top-8 font-heading text-[90px] font-black leading-none text-blue-500/10 sm:text-[130px]">
@@ -2127,7 +2156,7 @@ export default function App() {
           scale: showTop ? 1 : 0.85,
           pointerEvents: showTop ? "auto" : "none",
         }}
-        transition={{ duration: 0.28, ease: "easeOut" }}
+        transition={{ duration: 0.22, ease: "easeOut" }}
         className="fixed bottom-5 right-5 z-[9998] grid h-14 w-14 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-violet-600 text-2xl text-white shadow-2xl shadow-blue-600/30 transition hover:-translate-y-1 sm:bottom-6 sm:right-6"
         aria-label="Go to top"
       >
@@ -2289,7 +2318,7 @@ function SectionHead({ eyebrow, title, text, dark = false }) {
       variants={fadeUp}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: false, amount: 0.22 }}
+      viewport={{ once: false, amount: 0.18 }}
       className="relative mx-auto mb-8 max-w-3xl text-center sm:mb-10"
     >
       <p

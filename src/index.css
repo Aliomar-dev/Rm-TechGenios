@@ -108,11 +108,11 @@ a {
 
 .footer-3d-cube {
   transform-style: preserve-3d;
-  animation: footerFloatCube 7s ease-in-out infinite;
+  animation: footerFloatCube 8s ease-in-out infinite;
 }
 
 .footer-3d-ring {
-  animation: footerFloatRing 8s ease-in-out infinite;
+  animation: footerFloatRing 9s ease-in-out infinite;
 }
 
 @keyframes footerFloatCube {
@@ -240,17 +240,17 @@ a {
   .dot-grid-light,
   .dot-grid-dark,
   .footer-grid {
-    background-size: 32px 32px;
+    background-size: 34px 34px;
   }
 
   .footer-3d-cube,
   .footer-3d-ring {
-    animation-duration: 12s;
+    animation-duration: 14s;
   }
 
   section {
     content-visibility: auto;
-    contain-intrinsic-size: 800px;
+    contain-intrinsic-size: 900px;
   }
 
   header,
@@ -260,15 +260,21 @@ a {
   }
 
   .backdrop-blur-2xl {
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .backdrop-blur-xl {
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .shadow-2xl {
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+  }
+
+  .blur-3xl {
+    filter: blur(36px);
   }
 
   ::-webkit-scrollbar {
