@@ -512,7 +512,7 @@ function LeadershipSignatures() {
       <div className="grid gap-5 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6">
         <div className="text-center md:text-left">
           <SignatureName fullName="Rehan Shahzad" />
-          <p className="mt-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500 sm:text-sm">
+          <p className="mt-2 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 sm:text-xs lg:text-[13px]">
             Founder of RM TechGenios
           </p>
         </div>
@@ -525,7 +525,7 @@ function LeadershipSignatures() {
             startDelay={980}
             colorClass="text-[#0f63c7]"
           />
-          <p className="mt-2 text-xs font-black uppercase tracking-[0.18em] text-slate-500 sm:text-sm">
+          <p className="mt-2 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 sm:text-xs lg:text-[13px]">
             Director of RM TechGenios
           </p>
         </div>
@@ -1720,7 +1720,25 @@ export default function App() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(34,211,238,0.26),transparent_28%),radial-gradient(circle_at_80%_12%,rgba(99,102,241,0.26),transparent_30%)]" />
             <AgencyBg dark />
 
-         <div className="absolute left-6 top-1/2 z-10 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex">
+         <div className="absolute left-6 top-[36.3%] z-10 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex">
+  <motion.button
+    type="button"
+    onClick={() => goHome("#home")}
+    initial={{ opacity: 0, x: -24, scale: 0.9 }}
+    animate={{ opacity: 1, x: 0, scale: 1 }}
+    transition={{ delay: 0.52, duration: 0.45, ease: "easeOut" }}
+    className="mb-10 grid h-[68px] w-[68px] place-items-center bg-transparent p-0"
+    aria-label="RM TechGenios Home"
+  >
+    <img
+      src={logo}
+      alt="RM TechGenios Logo"
+      loading="eager"
+      decoding="async"
+      className="h-full w-full object-contain drop-shadow-[0_18px_34px_rgba(0,0,0,0.35)]"
+    />
+  </motion.button>
+
   {socialLinks.map((item, index) => (
     <motion.div
       key={item.name}
