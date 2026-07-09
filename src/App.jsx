@@ -36,7 +36,7 @@ import {
   FaLinkedinIn,
   FaWhatsapp,
 } from "react-icons/fa";
-import logo from "./assets/logo.jpeg";
+import logo from "./assets/logo.png";
 import aboutImg from "./assets/about-company.jpg";
 
 const companyEmail = "RehanShahzad2023@gmail.com";
@@ -503,8 +503,24 @@ function Reveal({ children, className = "", delay = 0, direction = "up" }) {
   const variants = {
     hidden: {
       opacity: 0,
-      y: direction === "up" ? (isMobile ? 22 : 42) : direction === "down" ? -32 : 0,
-      x: direction === "left" ? (isMobile ? 18 : 42) : direction === "right" ? (isMobile ? -18 : -42) : 0,
+      y:
+        direction === "up"
+          ? isMobile
+            ? 22
+            : 42
+          : direction === "down"
+            ? -32
+            : 0,
+      x:
+        direction === "left"
+          ? isMobile
+            ? 18
+            : 42
+          : direction === "right"
+            ? isMobile
+              ? -18
+              : -42
+            : 0,
       scale: isMobile ? 0.98 : 0.96,
       filter: isMobile ? "blur(2px)" : "blur(7px)",
     },
@@ -563,7 +579,9 @@ function TiltCard({ children, className = "" }) {
     <motion.div
       onMouseMove={handleMove}
       onMouseLeave={reset}
-      style={isMobile ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+      style={
+        isMobile ? undefined : { rotateX, rotateY, transformStyle: "preserve-3d" }
+      }
       className={className}
     >
       {children}
@@ -694,25 +712,57 @@ function Header({
             }}
             exit={{ opacity: 0, y: -14 }}
             transition={{ duration: 0.18 }}
-            className="pointer-events-auto mx-auto flex h-[66px] max-w-7xl transform-gpu items-center justify-between rounded-2xl border px-3 backdrop-blur-2xl sm:h-[72px] sm:px-5"
+            className="pointer-events-auto relative mx-auto flex h-[66px] max-w-7xl transform-gpu items-center justify-between rounded-2xl border px-4 backdrop-blur-2xl sm:h-[72px] sm:px-5 lg:px-7"
           >
+            {/* DESKTOP BRAND:
+                Hero par sirf name.
+                Hero se neeche scroll karte hi navbar me logo show hoga. */}
             <button
               type="button"
               onClick={() => goHome("#home")}
-              className="flex min-w-0 items-center gap-3 text-white"
+              className="hidden min-w-0 items-center gap-3 text-white lg:flex"
+            >
+              <AnimatePresence initial={false}>
+                {navDark && (
+                  <motion.img
+                    key="desktop-navbar-logo"
+                    src={logo}
+                    alt="RM TechGenios Logo"
+                    loading="eager"
+                    decoding="async"
+                    initial={{ opacity: 0, scale: 0.82, x: -8 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.82, x: -8 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="h-11 w-11 shrink-0 object-contain drop-shadow-[0_12px_26px_rgba(0,0,0,0.28)]"
+                  />
+                )}
+              </AnimatePresence>
+
+              <strong className="block truncate font-heading text-[22px] font-black tracking-[-0.04em] text-white drop-shadow-[0_8px_20px_rgba(0,0,0,0.28)]">
+                RM TechGenios
+              </strong>
+            </button>
+
+            {/* MOBILE BRAND: transparent logo.png navbar ke andar */}
+            <button
+              type="button"
+              onClick={() => goHome("#home")}
+              className="flex min-w-0 items-center gap-3 text-white lg:hidden"
             >
               <img
                 src={logo}
                 alt="RM TechGenios Logo"
                 loading="eager"
                 decoding="async"
-                className="h-10 w-10 shrink-0 rounded-xl bg-white object-contain p-1 shadow-lg shadow-black/10 sm:h-11 sm:w-11"
+                className="h-10 w-10 shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(0,0,0,0.25)] sm:h-11 sm:w-11"
               />
 
               <span className="min-w-0 text-left leading-none">
                 <strong className="block truncate font-heading text-sm font-black tracking-tight sm:text-lg">
                   RM TechGenios
                 </strong>
+
                 <small className="mt-1 hidden text-[10px] font-black uppercase tracking-[0.22em] text-cyan-300 sm:block">
                   BPO & IT Support
                 </small>
@@ -770,17 +820,12 @@ function Header({
                   alt="RM TechGenios Logo"
                   loading="eager"
                   decoding="async"
-                  className="h-11 w-11 shrink-0 rounded-xl bg-white object-contain p-1"
+                  className="h-11 w-11 shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(0,0,0,0.25)]"
                 />
 
-                <div className="min-w-0">
-                  <h3 className="truncate font-heading text-sm font-black text-white">
-                    RM TechGenios
-                  </h3>
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300">
-                    Business Support
-                  </p>
-                </div>
+                <h3 className="truncate font-heading text-base font-black text-white">
+                  RM TechGenios
+                </h3>
               </div>
 
               <button
@@ -1603,24 +1648,42 @@ export default function App() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(34,211,238,0.26),transparent_28%),radial-gradient(circle_at_80%_12%,rgba(99,102,241,0.26),transparent_30%)]" />
             <AgencyBg dark />
 
-            <div className="absolute left-6 top-1/2 z-10 hidden -translate-y-1/2 flex-col gap-5 lg:flex">
-              {socialLinks.map((item, index) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, x: -24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + index * 0.08, duration: 0.45 }}
-                  whileHover={{ x: 8, scale: 1.05 }}
-                  className="group relative flex h-8 w-8 items-center justify-center"
-                >
-                  <SocialIcon item={item} dark />
+         <div className="absolute left-6 top-[36.3%] z-10 hidden -translate-y-1/2 flex-col items-center gap-4 lg:flex">
+  <motion.button
+    type="button"
+    onClick={() => goHome("#home")}
+    initial={{ opacity: 0, x: -24, scale: 0.9 }}
+    animate={{ opacity: 1, x: 0, scale: 1 }}
+    transition={{ delay: 0.52, duration: 0.45, ease: "easeOut" }}
+className="mb-10 grid h-[68px] w-[68px] place-items-center bg-transparent p-0"
+    aria-label="RM TechGenios Home"
+  >
+    <img
+      src={logo}
+      alt="RM TechGenios Logo"
+      loading="eager"
+      decoding="async"
+      className="h-full w-full object-contain drop-shadow-[0_18px_34px_rgba(0,0,0,0.35)]"
+    />
+  </motion.button>
 
-                  <span className="pointer-events-none absolute left-[42px] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl border border-white/10 bg-slate-950/90 px-3 py-2 text-xs font-black uppercase tracking-wider text-white opacity-0 shadow-xl backdrop-blur transition group-hover:opacity-100">
-                    {item.name}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
+  {socialLinks.map((item, index) => (
+    <motion.div
+      key={item.name}
+      initial={{ opacity: 0, x: -24 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.7 + index * 0.08, duration: 0.45 }}
+      whileHover={{ x: 8, scale: 1.05 }}
+      className="group relative flex h-8 w-8 items-center justify-center"
+    >
+      <SocialIcon item={item} dark />
+
+      <span className="pointer-events-none absolute left-[42px] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl border border-white/10 bg-slate-950/90 px-3 py-2 text-xs font-black uppercase tracking-wider text-white opacity-0 shadow-xl backdrop-blur transition group-hover:opacity-100">
+        {item.name}
+      </span>
+    </motion.div>
+  ))}
+</div>
 
             <div className="relative mx-auto grid min-h-[calc(100vh-130px)] max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
               <motion.div
@@ -1772,7 +1835,10 @@ export default function App() {
                 initial={{ opacity: 0, x: isMobile ? 0 : -35, scale: 0.97 }}
                 whileInView={{ opacity: 1, x: 0, scale: 1 }}
                 viewport={{ once: false, amount: 0.18 }}
-                transition={{ duration: isMobile ? 0.38 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  duration: isMobile ? 0.38 : 0.65,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 className="relative"
               >
                 <div className="relative mx-auto max-w-[640px] rounded-[30px] bg-white p-[8px] shadow-[0_20px_60px_rgba(15,23,42,0.16)] sm:p-[10px]">
@@ -1790,7 +1856,10 @@ export default function App() {
                 initial={{ opacity: 0, x: isMobile ? 0 : 35 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: false, amount: 0.18 }}
-                transition={{ duration: isMobile ? 0.38 : 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  duration: isMobile ? 0.38 : 0.65,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 className="relative"
               >
                 <div className="inline-flex items-center gap-3">
@@ -1887,7 +1956,10 @@ export default function App() {
                     initial={{ opacity: 0, y: isMobile ? 20 : 36, scale: 0.98 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: false, amount: 0.14 }}
-                    transition={{ duration: isMobile ? 0.34 : 0.55, delay: isMobile ? 0 : index * 0.035 }}
+                    transition={{
+                      duration: isMobile ? 0.34 : 0.55,
+                      delay: isMobile ? 0 : index * 0.035,
+                    }}
                     className={`group rounded-[28px] border bg-white p-5 shadow-[0_20px_70px_rgba(15,40,90,0.07)] transition hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10 sm:min-h-[245px] sm:p-7 ${
                       index % 2 === 0
                         ? "border-cyan-300"
@@ -2062,7 +2134,10 @@ export default function App() {
                     initial={{ opacity: 0, y: isMobile ? 14 : 28, scale: 0.97 }}
                     whileInView={{ opacity: 1, y: 0, scale: 1 }}
                     viewport={{ once: false, amount: 0.16 }}
-                    transition={{ duration: isMobile ? 0.3 : 0.48, delay: isMobile ? 0 : index * 0.025 }}
+                    transition={{
+                      duration: isMobile ? 0.3 : 0.48,
+                      delay: isMobile ? 0 : index * 0.025,
+                    }}
                     className={`overflow-hidden rounded-2xl border border-white bg-white shadow-lg shadow-slate-900/5 sm:rounded-[24px] ${
                       index % 2 === 0 ? "translate-y-4 sm:translate-y-6" : ""
                     }`}
