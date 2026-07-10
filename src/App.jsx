@@ -40,8 +40,10 @@ import logo from "./assets/logo.png";
 import aboutImg from "./assets/about-company.jpg";
 
 const companyEmail = "RehanShahzad2023@gmail.com";
-const companyPhone = "+92-324 444 9592";
+const companyPhone = "+92 324 444 9592";
 const companyPhoneLink = "+923244449592";
+const secondaryCompanyPhone = "+92 317 468 8346";
+const secondaryCompanyPhoneLink = "+923174688346";
 const companyAddress =
   "Office No. 1609, 16th floor, All Hafeez Executive Firdous Market Gulberg III, Lahore, Pakistan.";
 const companyMapLink =
@@ -462,74 +464,37 @@ function CountNumber({ end, suffix = "", prefix = "" }) {
   );
 }
 
-function SignatureName({
-  fullName,
-  startDelay = 0,
-  colorClass = "text-[#008f82]",
-}) {
+function SignatureName() {
   const ref = useRef(null);
-  const isMobile = useIsMobile();
-  const isInView = useInView(ref, { once: false, amount: isMobile ? 0.25 : 0.55 });
+  const isInView = useInView(ref, { once: false, amount: 0.65 });
+  const fullName = "Rehan Shahzad";
   const [typedName, setTypedName] = useState("");
 
   useEffect(() => {
     if (!isInView) {
       setTypedName("");
-      return undefined;
+      return;
     }
 
     let index = 0;
-    let interval;
     setTypedName("");
 
-    const timeout = setTimeout(() => {
-      interval = setInterval(() => {
-        index += 1;
-        setTypedName(fullName.slice(0, index));
-        if (index >= fullName.length) clearInterval(interval);
-      }, isMobile ? 28 : 42);
-    }, startDelay);
+    const interval = setInterval(() => {
+      index += 1;
+      setTypedName(fullName.slice(0, index));
+      if (index >= fullName.length) clearInterval(interval);
+    }, 86);
 
-    return () => {
-      clearTimeout(timeout);
-      if (interval) clearInterval(interval);
-    };
-  }, [isInView, fullName, startDelay, isMobile]);
+    return () => clearInterval(interval);
+  }, [isInView]);
 
   return (
     <div
       ref={ref}
-      className={`signature-font signature-name inline-flex min-h-[40px] items-end whitespace-nowrap text-[26px] leading-none sm:min-h-[48px] sm:text-[34px] lg:text-[39px] xl:text-[42px] ${colorClass}`}
+      className="signature-font signature-name inline-flex min-h-[54px] items-end text-[35px] leading-none text-[#008f82] sm:text-[43px] lg:text-[50px]"
     >
       {typedName}
-    </div>
-  );
-}
-
-function LeadershipSignatures() {
-  return (
-    <div className="mt-7 rounded-[28px] border border-slate-200 bg-slate-50 p-4 shadow-[0_18px_55px_rgba(15,23,42,0.06)] sm:p-5">
-      <div className="grid gap-5 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-6">
-        <div className="text-center md:text-left">
-          <SignatureName fullName="Rehan Shahzad" />
-          <p className="mt-2 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 sm:text-xs lg:text-[13px]">
-            Founder of RM TechGenios
-          </p>
-        </div>
-
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent md:h-24 md:w-px md:bg-gradient-to-b" />
-
-        <div className="text-center md:text-left">
-          <SignatureName
-            fullName="Muteen Mubeen"
-            startDelay={980}
-            colorClass="text-[#0f63c7]"
-          />
-          <p className="mt-2 whitespace-nowrap text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 sm:text-xs lg:text-[13px]">
-            Director of RM TechGenios
-          </p>
-        </div>
-      </div>
+      <span className="signature-cursor ml-1 inline-block h-[30px] w-[2px] bg-[#008f82] sm:h-[38px]" />
     </div>
   );
 }
@@ -693,19 +658,6 @@ function AgencyBg({ dark = false }) {
   );
 }
 
-
-function LogoImage({ className = "", loading = "lazy" }) {
-  return (
-    <img
-      src={logo}
-      alt="RM TechGenios Logo"
-      loading={loading}
-      decoding="async"
-      className={className}
-    />
-  );
-}
-
 function SocialIcon({ item, dark = false }) {
   return (
     <a
@@ -726,7 +678,6 @@ function Header({
   menuOpen,
   setMenuOpen,
   navDark,
-  showDesktopLogo,
   closeMenu,
   openContactPage,
   goHome,
@@ -774,7 +725,7 @@ function Header({
               className="hidden min-w-0 items-center gap-3 text-white lg:flex"
             >
               <AnimatePresence initial={false}>
-                {showDesktopLogo && (
+                {navDark && (
                   <motion.img
                     key="desktop-navbar-logo"
                     src={logo}
@@ -801,8 +752,11 @@ function Header({
               onClick={() => goHome("#home")}
               className="flex min-w-0 items-center gap-3 text-white lg:hidden"
             >
-              <LogoImage
+              <img
+                src={logo}
+                alt="RM TechGenios Logo"
                 loading="eager"
+                decoding="async"
                 className="h-10 w-10 shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(0,0,0,0.25)] sm:h-11 sm:w-11"
               />
 
@@ -812,7 +766,7 @@ function Header({
                 </strong>
 
                 <small className="mt-1 hidden text-[10px] font-black uppercase tracking-[0.22em] text-cyan-300 sm:block">
-                  Digital Agency
+                  BPO & IT Support
                 </small>
               </span>
             </button>
@@ -863,8 +817,11 @@ function Header({
           >
             <div className="mb-3 flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.06] p-3">
               <div className="flex min-w-0 items-center gap-3">
-                <LogoImage
+                <img
+                  src={logo}
+                  alt="RM TechGenios Logo"
                   loading="eager"
+                  decoding="async"
                   className="h-11 w-11 shrink-0 object-contain drop-shadow-[0_10px_22px_rgba(0,0,0,0.25)]"
                 />
 
@@ -1206,12 +1163,21 @@ function LegalPage({ type, openLegalPage, goHome }) {
                 {companyEmail}
               </a>
 
-              <a
-                href={`tel:${companyPhoneLink}`}
-                className="transition hover:text-cyan-300"
-              >
-                {companyPhone}
-              </a>
+              <div className="grid gap-1">
+                <a
+                  href={`tel:${companyPhoneLink}`}
+                  className="transition hover:text-cyan-300"
+                >
+                  {companyPhone}
+                </a>
+
+                <a
+                  href={`tel:${secondaryCompanyPhoneLink}`}
+                  className="transition hover:text-cyan-300"
+                >
+                  {secondaryCompanyPhone}
+                </a>
+              </div>
 
               <a
                 href={companyMapLink}
@@ -1279,6 +1245,35 @@ function ContactInfoCard({ href, icon, title, text, external = false }) {
   );
 }
 
+function ContactPhoneCard() {
+  return (
+    <div className="group rounded-[24px] border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/[0.1]">
+      <div className="flex items-start gap-4">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white">
+          <FiPhone />
+        </span>
+
+        <div>
+          <h4 className="font-heading font-black">Call / WhatsApp</h4>
+
+          <div className="mt-1 grid gap-1 text-sm leading-6 text-white/60 group-hover:text-white sm:text-base">
+            <a href={`tel:${companyPhoneLink}`} className="transition hover:text-cyan-300">
+              {companyPhone}
+            </a>
+
+            <a
+              href={`tel:${secondaryCompanyPhoneLink}`}
+              className="transition hover:text-cyan-300"
+            >
+              {secondaryCompanyPhone}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ContactPage({
   goHome,
   formData,
@@ -1325,12 +1320,7 @@ function ContactPage({
               </p>
 
               <div className="mt-8 grid gap-4">
-                <ContactInfoCard
-                  href={`tel:${companyPhoneLink}`}
-                  icon={<FiPhone />}
-                  title="Call / WhatsApp"
-                  text={companyPhone}
-                />
+                <ContactPhoneCard />
 
                 <ContactInfoCard
                   href={`mailto:${companyEmail}`}
@@ -1459,7 +1449,6 @@ export default function App() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [navDark, setNavDark] = useState(initialPage.page !== "home");
-  const [showDesktopLogo, setShowDesktopLogo] = useState(initialPage.page !== "home");
   const [showTop, setShowTop] = useState(false);
   const [activePage, setActivePage] = useState(initialPage.page);
   const [legalPage, setLegalPage] = useState(initialPage.legal);
@@ -1478,21 +1467,8 @@ export default function App() {
   const { scrollY, scrollYProgress } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const isHomePage = activePage === "home";
-    setNavDark(latest > 540 || !isHomePage);
+    setNavDark(latest > 540 || activePage !== "home");
     setShowTop(latest > 520);
-
-    if (!isHomePage) {
-      setShowDesktopLogo(true);
-      return;
-    }
-
-    const heroSection = document.getElementById("home");
-    const heroFinished = heroSection
-      ? heroSection.getBoundingClientRect().bottom <= 88
-      : latest >= window.innerHeight - 90;
-
-    setShowDesktopLogo(heroFinished);
   });
 
   useEffect(() => {
@@ -1509,7 +1485,6 @@ export default function App() {
       setLegalPage(pageData.legal);
       setMenuOpen(false);
       setNavDark(pageData.page !== "home");
-      setShowDesktopLogo(pageData.page !== "home");
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -1522,16 +1497,7 @@ export default function App() {
   useEffect(() => {
     if (activePage !== "home") {
       setNavDark(true);
-      setShowDesktopLogo(true);
-      return;
     }
-
-    const heroSection = document.getElementById("home");
-    const heroFinished = heroSection
-      ? heroSection.getBoundingClientRect().bottom <= 88
-      : window.scrollY >= window.innerHeight - 90;
-
-    setShowDesktopLogo(heroFinished);
   }, [activePage]);
 
   const heroY = useTransform(scrollYProgress, [0, 0.35], [0, isMobile ? -25 : -70]);
@@ -1548,7 +1514,6 @@ export default function App() {
     setLegalPage(legal);
     setMenuOpen(false);
     setNavDark(true);
-    setShowDesktopLogo(true);
     window.history.pushState({}, "", url);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -1557,7 +1522,6 @@ export default function App() {
     setActivePage("home");
     setLegalPage(null);
     setMenuOpen(false);
-    setShowDesktopLogo(false);
     window.history.pushState({}, "", "/");
 
     setTimeout(() => {
@@ -1677,7 +1641,6 @@ export default function App() {
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         navDark={navDark}
-        showDesktopLogo={showDesktopLogo}
         closeMenu={closeMenu}
         openContactPage={openContactPage}
         goHome={goHome}
@@ -1727,7 +1690,7 @@ export default function App() {
     initial={{ opacity: 0, x: -24, scale: 0.9 }}
     animate={{ opacity: 1, x: 0, scale: 1 }}
     transition={{ delay: 0.52, duration: 0.45, ease: "easeOut" }}
-    className="mb-10 grid h-[68px] w-[68px] place-items-center bg-transparent p-0"
+className="mb-10 grid h-[68px] w-[68px] place-items-center bg-transparent p-0"
     aria-label="RM TechGenios Home"
   >
     <img
@@ -1744,7 +1707,7 @@ export default function App() {
       key={item.name}
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.52 + index * 0.08, duration: 0.36 }}
+      transition={{ delay: 0.7 + index * 0.08, duration: 0.45 }}
       whileHover={{ x: 8, scale: 1.05 }}
       className="group relative flex h-8 w-8 items-center justify-center"
     >
@@ -1972,7 +1935,13 @@ export default function App() {
                   </p>
                 </div>
 
-                <LeadershipSignatures />
+                <div className="mt-7 rounded-[26px] border border-slate-200 bg-slate-50 p-5">
+                  <SignatureName />
+
+                  <p className="mt-2 text-sm font-bold tracking-[0.5px] text-slate-700 sm:text-[16px]">
+                    Founder of RM TechGenios
+                  </p>
+                </div>
               </motion.div>
             </div>
           </section>
@@ -2325,7 +2294,11 @@ function Footer({ openLegalPage, openContactPage, goHome }) {
         <div className="grid gap-10 border-b border-white/15 pb-12 lg:grid-cols-[1.15fr_0.75fr_1.25fr] lg:gap-12">
           <Reveal>
             <div className="flex items-center gap-4">
-              <LogoImage
+              <img
+                src={logo}
+                alt="RM TechGenios Logo"
+                loading="lazy"
+                decoding="async"
                 className="h-14 w-14 rounded-2xl bg-white object-contain p-1"
               />
 
@@ -2400,15 +2373,24 @@ function Footer({ openLegalPage, openContactPage, goHome }) {
                 </p>
               </a>
 
-              <a href={`tel:${companyPhoneLink}`} className="group flex gap-4">
+              <div className="group flex gap-4">
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/15 text-white backdrop-blur transition group-hover:bg-white group-hover:text-blue-600">
                   <FiPhone />
                 </span>
 
-                <p className="leading-7 text-white/75 transition group-hover:text-white">
-                  {companyPhone}
-                </p>
-              </a>
+                <div className="grid gap-1 leading-7 text-white/75 transition group-hover:text-white">
+                  <a href={`tel:${companyPhoneLink}`} className="transition hover:text-cyan-300">
+                    {companyPhone}
+                  </a>
+
+                  <a
+                    href={`tel:${secondaryCompanyPhoneLink}`}
+                    className="transition hover:text-cyan-300"
+                  >
+                    {secondaryCompanyPhone}
+                  </a>
+                </div>
+              </div>
 
               <a href={`mailto:${companyEmail}`} className="group flex gap-4">
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/15 text-white backdrop-blur transition group-hover:bg-white group-hover:text-blue-600">
