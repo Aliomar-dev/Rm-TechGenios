@@ -28,7 +28,7 @@ import {
   FiTrendingUp,
   FiUsers,
   FiX,
-  FiZap,
+  FiZap, 
 } from "react-icons/fi";
 import {
   FaFacebookF,
@@ -2471,27 +2471,54 @@ function Footer({ openLegalPage, openContactPage, goHome }) {
           </Reveal>
         </div>
 
-        <div className="flex flex-col gap-4 pt-7 text-sm font-bold text-white/65 md:flex-row md:items-center md:justify-between">
-          <p>© 2026 RM TechGenios. All rights reserved.</p>
+        {/* Bottom Section */}
+<div className="border-t border-white/15 pt-7">
+  <div className="flex flex-col items-center gap-4 text-center text-sm font-bold text-white/65 md:flex-row md:justify-between md:text-left">
+    <p>
+      © {new Date().getFullYear()} RM TechGenios. All rights reserved.
+    </p>
 
-          <div className="flex flex-wrap gap-5">
-            <button
-              type="button"
-              onClick={() => openLegalPage("privacy")}
-              className="transition hover:text-white"
-            >
-              Privacy Policy
-            </button>
+    <div className="flex flex-wrap items-center justify-center gap-5 md:justify-end">
+      <button
+        type="button"
+        onClick={() => openLegalPage("privacy")}
+        className="transition hover:text-white"
+      >
+        Privacy Policy
+      </button>
 
-            <button
-              type="button"
-              onClick={() => openLegalPage("terms")}
-              className="transition hover:text-white"
-            >
-              Terms & Conditions
-            </button>
-          </div>
-        </div>
+      <button
+        type="button"
+        onClick={() => openLegalPage("terms")}
+        className="transition hover:text-white"
+      >
+        Terms & Conditions
+      </button>
+    </div>
+  </div>
+
+{/* Developer Credit */}
+<div className="pb-3.5 pt-5 text-center">
+  <a
+    href="mailto:omar786.official@gmail.com"
+    aria-label="Contact HD Code Lab"
+    className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 text-[11px] font-semibold tracking-[-0.01em] text-white/45 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_12px_32px_rgba(34,211,238,0.14)]"
+  >
+    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-300/12 text-cyan-200 transition-all duration-300 group-hover:bg-cyan-300 group-hover:text-blue-950">
+      <FiCode className="text-[10px]" />
+    </span>
+
+    <span>
+      Designed &amp; Developed by{" "}
+      <span className="font-extrabold text-white/75 transition-colors duration-300 group-hover:text-cyan-200">
+        {"{HD}"} Code Lab
+      </span>
+    </span>
+
+    <FiMail className="text-[10px] text-white/35 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-cyan-200 group-hover:opacity-100" />
+  </a>
+</div>
+</div>
       </div>
     </footer>
   );
