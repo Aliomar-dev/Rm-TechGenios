@@ -2501,7 +2501,7 @@ function Footer({ openLegalPage, openContactPage, goHome }) {
 <div className="pb-3.5 pt-5 text-center">
   <a
     href="mailto:omar786.official@gmail.com"
-    aria-label="Contact HD Code Lab"
+    aria-label="Contact Hidden Dimension"
     className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2 text-[11px] font-semibold tracking-[-0.01em] text-white/45 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-white hover:shadow-[0_12px_32px_rgba(34,211,238,0.14)]"
   >
     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-cyan-300/12 text-cyan-200 transition-all duration-300 group-hover:bg-cyan-300 group-hover:text-blue-950">
@@ -2511,7 +2511,7 @@ function Footer({ openLegalPage, openContactPage, goHome }) {
     <span>
       Designed &amp; Developed by{" "}
       <span className="font-extrabold text-white/75 transition-colors duration-300 group-hover:text-cyan-200">
-        {"{HD}"} Code Lab
+        {"{HD}"} Hidden Dimension
       </span>
     </span>
 
